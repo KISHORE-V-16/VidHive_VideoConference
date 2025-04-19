@@ -667,311 +667,354 @@ const Room = () => {
         return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     };
 
-    return (
-        <>
-            {
-                (loc.id == "create") && (<Createmeeting />)
-            }
-            {
-                (loc.id == "Joinmeet") && (<JoinMeeting setupSources={setupSources} />)
-            }
-            {
-                (loc.id == "mymeetings") && (<Mymeetings setupSources={setupSources} />)
-            }
+  // Room component return part and styled CSS
 
-            {
-                (loc.id == "Join")
-                &&
-                (
-                    <AppContainer>
-                        <ToastContainer />
-                        <header>
-                            <HeaderVideo hangUp={hangUp} />
-                        </header>
-                        <body>
-                            <div className="container">
-                                <div className="sub-container">
-                                    {
-                                        (isnVideo) &&
-                                        (<div className="sub-1"><video className='videodesign' ref={localRef} autoPlay playsInline></video> </div>)
-                                    }
+// Return part of the Room component
+return (
+    <>
+        {loc.id === "create" && <Createmeeting />}
+        {loc.id === "Joinmeet" && <JoinMeeting setupSources={setupSources} />}
+        {loc.id === "mymeetings" && <Mymeetings setupSources={setupSources} />}
 
-                                    {
-                                        (isremote && !avatar) && (<div className="sub-1">
-                                            <video className='videodesign' ref={remoteRef} autoPlay></video>
-                                        </div>)
-                                    }
-                                    {(avatar) && (<div className="sub-2">
-                                        <AvatarView
-                                            localStream={remstream}
-                                            onStreamAvailable={(stream) => {
-                                                setAvatarStream(stream);
-                                            }}
-                                        />
-                                    </div>)}
-                                </div>
-                            </div>
-                            {isChatOpen && (
-                                <ChatWrapper>
-                                    <ChatContainer>
-                                        {/* Header */}
-                                        <Header>
-                                            <Title>Chat Room</Title>
-                                            <Status>Online</Status>
-                                        </Header>
+        {loc.id === "Join" && (
+            <AppContainer>
+                <ToastContainer />
+                <HeaderVideo hangUp={hangUp} />
+                
+                <MainContent>
+                    <VideoGrid>
+                        {isnVideo && (
+                            <VideoContainer>
+                                <video ref={localRef} autoPlay playsInline muted />
+                                <ParticipantLabel>You</ParticipantLabel>
+                            </VideoContainer>
+                        )}
 
-                                        {/* Message List */}
-                                        <MessageList>
-                                            {messages.map((message, index) => (
-                                                <Message key={index} isLocal={message.isLocal}>
-                                                    <Text isLocal={message.isLocal}>{message.text}</Text>
-                                                    <Timestamp>{formatTime(message.timestamp)}</Timestamp>
-                                                </Message>
-                                            ))}
-                                        </MessageList>
+                        {isremote && !avatar && (
+                            <VideoContainer>
+                                <video ref={remoteRef} autoPlay playsInline />
+                                <ParticipantLabel>Remote</ParticipantLabel>
+                            </VideoContainer>
+                        )}
+                        
+                        {avatar && (
+                            <AvatarContainer>
+                                <AvatarView
+                                    localStream={remstream}
+                                    onStreamAvailable={(stream) => {
+                                        setAvatarStream(stream);
+                                    }}
+                                />
+                                <ParticipantLabel>AI Avatar</ParticipantLabel>
+                            </AvatarContainer>
+                        )}
+                    </VideoGrid>
+                </MainContent>
 
-                                        {/* Input Area */}
-                                        <InputArea>
-                                            <Input
-                                                type="text"
-                                                value={inputMessage}
-                                                onChange={(e) => setInputMessage(e.target.value)}
-                                                onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-                                                placeholder="Type a message..."
-                                            />
-                                            <SendButton onClick={sendMessage}>Send</SendButton>
-                                        </InputArea>
-                                    </ChatContainer>
-                                </ChatWrapper>
-                            )}
-                        </body>
-                        <footer>
-                            <FooterVideo newMessageCount={newMessageCount} chatOpen={isChatOpen} toggleChat={toggleChat} toggleAudio={toggleAudio} emotion_detect={toggleEmotionDetection} emotionDetectionOn={emotionDetectionOn} toggleVideo={toggleVideo} toggleAvatar={toggleAvatar} useAvatar={useAvatar} isScreensharing={isScreenSharing} toggleScreenSharing={toggleScreenSharing} isMuted={isMuted} isVideo={isVideo} setIsVideo={setIsVideo} />
-                        </footer>
-                    </AppContainer>
-                )
-            }
-        </>
-    )
+                {isChatOpen && (
+                    <ChatWrapper>
+                        <ChatContainer>
+                            <Header>
+                                <Title>Chat Room</Title>
+                                <Status>Online</Status>
+                            </Header>
+
+                            <MessageList>
+                                {messages.map((message, index) => (
+                                    <Message key={index} isLocal={message.isLocal}>
+                                        <Text isLocal={message.isLocal}>{message.text}</Text>
+                                        <Timestamp>{formatTime(message.timestamp)}</Timestamp>
+                                    </Message>
+                                ))}
+                            </MessageList>
+
+                            <InputArea>
+                                <Input
+                                    type="text"
+                                    value={inputMessage}
+                                    onChange={(e) => setInputMessage(e.target.value)}
+                                    onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                                    placeholder="Type a message..."
+                                />
+                                <SendButton onClick={sendMessage}>Send</SendButton>
+                            </InputArea>
+                        </ChatContainer>
+                    </ChatWrapper>
+                )}
+
+                <FooterVideo 
+                    newMessageCount={newMessageCount} 
+                    chatOpen={isChatOpen} 
+                    toggleChat={toggleChat} 
+                    toggleAudio={toggleAudio} 
+                    emotion_detect={toggleEmotionDetection} 
+                    emotionDetectionOn={emotionDetectionOn} 
+                    toggleVideo={toggleVideo} 
+                    toggleAvatar={toggleAvatar} 
+                    useAvatar={useAvatar} 
+                    isScreensharing={isScreenSharing} 
+                    toggleScreenSharing={toggleScreenSharing} 
+                    isMuted={isMuted} 
+                    isVideo={isVideo} 
+                />
+            </AppContainer>
+        )}
+    </>
+);
 }
 
-const ChatWrapper = styled.div`
-  position: fixed;
-  bottom: 4rem; // Position above the footer
-  right: 1rem; // Position at the right side
-  height: 80vh;
-  width: 26rem;
-  z-index: 1000; // Ensure it appears above other elements
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.9);
-`;
-
 const AppContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 98vh;
+   display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  width: 100vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #030b1a 0%, #0a101f 100%);
+  box-sizing: border-box;
+  overflow-x: hidden;
+  scrollbar-width: none;
 
-  header {
+  /* Add a subtle scan line effect with improved visibility */
+  &:after {
+    content: '';
     position: fixed;
-    top:-5px;
-    left: 15px;
-    background-color: darkgray;
-    z-index: 1000;
-    height: 3rem; /* Adjust as needed */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .container {
-    flex-grow: 1;
-    width: 77.20rem;
-    height: 105%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #001527;
-    padding: 1rem;
-    margin-left: -16px;
-    margin-top: 19px;
-    overflow: hidden;
-
-    .sub-container {
-      width: 100%;
-      height: auto;
-      display: flex;
-      justify-content: center;
-      flex-flow: row;
-      gap: 2rem;
-      padding: 1rem;
-      border-radius: 10px;
-
-      video {
-      width: auto; /* Take the full width of the grid cell */
-      height: 25rem; /* Take the full height of the grid cell */
-      object-fit: cover; /* Maintain aspect ratio and cover the cell */
-      border-radius: 8px; /* Add rounded corners if needed */
-    }
-
-      .sub-1 {
-        border-radius: 10px;
-        background-color: rgba(255, 255, 255, 0.1);
-        color: white;
-        text-align: center;
-
-        // Ensure .sub-1 fits exactly into grid cells
-        width: 32rem;
-        height: 25rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        .video-placeholder {
-              
-                border-radius: 15px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-          }
-      }
-
-      .sub-2 {
-            border-radius: 10px;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
-            text-align: center;
-            width: 32rem;
-            height: 25rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 30px;
-            overflow: hidden; /* Ensure the avatar doesn't overflow */
-    }
-    }
-  }
-
-  footer {
-    position: fixed;
-    bottom: 5px;
+    top: 0;
+    left: 0;
     width: 100%;
-    background-color: darkgray;
-    z-index: 1000;
-    height: 3rem; /* Adjust as needed */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    height: 5px;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(32, 100, 226, 0.2) 30%, 
+      rgba(76, 0, 255, 0.2) 70%, 
+      transparent 100%);
+    box-shadow: 0 0 10px rgba(10, 101, 237, 0.3);
+    z-index: 5;
+    opacity: 0.5;
   }
 `;
 
+const MainContent = styled.main`
+    flex: 1;
+    padding: 4.5rem 0.5rem 4.5rem 0.5rem;
+    width: 100%;
+    height: calc(90% - 9rem); // Adjusted height calculation
+    display: flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items: center;
+    position: relative; // Added for better positioning
+    
+    @media (min-width: 768px) {
+        padding: 5rem 1rem 5rem 1rem;
+        height: calc(100% - 10rem); // Adjusted for larger padding
+    }
+`;
 
-// Styled Components (unchanged)
+
+const VideoGrid = styled.div`
+    display: flex;
+    flex-direction:column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 1200px;
+    max-height: 100%; // Added max-height
+    
+    @media (min-width: 768px) {
+        gap: 1rem;
+    }
+`;
+
+const VideoContainer = styled.div`
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    aspect-ratio: 16/9;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden; // Keep this to clip video content
+    
+    video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    @media (min-width: 768px) {
+        max-width: 500px;
+    }
+    
+    @media (min-width: 1200px) {
+        max-width: 600px;
+    }
+`;
+
+
+const AvatarContainer = styled(VideoContainer)`
+    background-color: rgba(138, 43, 226, 0.1);
+`;
+
+const ParticipantLabel = styled.div`
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+`;
+
+const ChatWrapper = styled.div`
+    position: fixed;
+    bottom: 5rem;
+    right: 1rem;
+    width: 320px;
+    height: 70vh;
+    z-index: 900;
+    border-radius: 12px;
+    overflow: hidden; // Keep this to clip chat container
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.9);
+    
+    @media (max-width: 768px) {
+        bottom: 4.5rem;
+        right: 0.5rem;
+        width: 280px;
+        height: 60vh;
+    }
+`;
+
 const ChatContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 80vh;
-  width: 25rem;
-  background: linear-gradient(135deg, #0a192f, #1a365d);
-  color: white;
-  font-family: 'Arial', sans-serif;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(135deg, #0a192f, #1a365d);
+    color: white;
+    font-family: 'Arial', sans-serif;
 `;
 
 const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  background-color: #000;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background-color: #000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 `;
 
 const Title = styled.h1`
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #64ffda;
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #64ffda;
 `;
 
 const Status = styled.span`
-  font-size: 0.9rem;
-  color: #64ffda;
-  padding: 0.3rem 0.6rem;
-  border-radius: 15px;
-  background: rgba(100, 255, 218, 0.1);
+    font-size: 0.8rem;
+    color: #64ffda;
+    padding: 0.2rem 0.5rem;
+    border-radius: 15px;
+    background: rgba(100, 255, 218, 0.1);
 `;
 
 const MessageList = styled.div`
-  flex: 1;
-  padding: 1rem;
-  overflow-y: auto;
-  scrollbar-width: none;
-  background: rgba(255, 255, 255, 0.05);
+    flex: 1;
+    padding: 0.75rem;
+    overflow-y: auto;
+    overflow-x: hidden; // Added to prevent horizontal scrolling
+    scrollbar-width: thin;
+    scrollbar-color: rgba(100, 255, 218, 0.3) transparent;
+    background: rgba(255, 255, 255, 0.05);
+    
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(100, 255, 218, 0.3);
+        border-radius: 10px;
+    }
 `;
 
 const Message = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: ${({ isLocal }) => (isLocal ? 'flex-end' : 'flex-start')};
-  margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: ${({ isLocal }) => (isLocal ? 'flex-end' : 'flex-start')};
+    margin-bottom: 0.75rem;
+    max-width: 100%; // Added to prevent overflow
 `;
 
 const Text = styled.div`
-  max-width: 70%;
-  padding: 0.8rem 1rem;
-  border-radius: ${({ isLocal }) => (isLocal ? '15px 15px 0 15px' : '15px 15px 15px 0')};
-  background: ${({ isLocal }) => (isLocal ? '#64ffda' : '#4b79b9')};
-  color: ${({ isLocal }) => (isLocal ? '#0a192f' : '#fff')};
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  word-wrap: break-word;
+    max-width: 80%;
+    padding: 0.6rem 0.8rem;
+    border-radius: ${({ isLocal }) => (isLocal ? '15px 15px 0 15px' : '15px 15px 15px 0')};
+    background: ${({ isLocal }) => (isLocal ? '#64ffda' : '#4b79b9')};
+    color: ${({ isLocal }) => (isLocal ? '#0a192f' : '#fff')};
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    word-wrap: break-word;
+    overflow-wrap: break-word; // Added for better text wrapping
+    font-size: 0.9rem;
 `;
 
 const Timestamp = styled.span`
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.7);
-  margin-top: 0.3rem;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 0.2rem;
 `;
 
 const InputArea = styled.div`
-  display: flex;
-  padding: 1rem;
-  background-color: rgb(0, 0, 0);
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    padding: 0.75rem;
+    background-color: rgb(0, 0, 0);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
 `;
 
 const Input = styled.input`
-  flex: 1;
-  padding: 0.8rem;
-  border: none;
-  border-radius: 15px;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  font-size: 1rem;
-  outline: none;
-  margin-right: 1rem;
+    flex: 1;
+    padding: 0.6rem;
+    border: none;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 0.9rem;
+    outline: none;
+    margin-right: 0.5rem;
 
-  &::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-  }
+    &::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
 `;
 
 const SendButton = styled.button`
-  padding: 0.8rem 1.5rem;
-  border: none;
-  border-radius: 15px;
-  background: #64ffda;
-  color: #0a192f;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s ease;
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 15px;
+    background: #64ffda;
+    color: #0a192f;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
 
-  &:hover {
-    background: #52e0c4;
-  }
+    &:hover {
+        background: #52e0c4;
+    }
 `;
+
+
 
 export default Room

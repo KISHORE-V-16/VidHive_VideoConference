@@ -23,11 +23,6 @@ const AvatarView = ({ onStreamAvailable, localStream }) => {
     const { scene } = useGLTF(url);
     const { nodes } = useGraph(scene);
 
-    // Log the model's node structure for debugging
-    useEffect(() => {
-      console.log("Model nodes:", nodes);
-    }, [nodes]);
-
     useEffect(() => {
       if (nodes.Wolf3D_Head) headMesh.push(nodes.Wolf3D_Head);
       if (nodes.Wolf3D_Teeth) headMesh.push(nodes.Wolf3D_Teeth);

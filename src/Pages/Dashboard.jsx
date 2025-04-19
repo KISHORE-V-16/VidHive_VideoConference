@@ -9,6 +9,9 @@ import { Link } from 'react-router-dom';
 import TextScramble from '../Components/TextScrammble';
 
 const Dashboard = () => {
+
+
+
   // Animation effect for cards on load
   useEffect(() => {
     const cards = document.querySelectorAll('.card');
@@ -47,7 +50,7 @@ const Dashboard = () => {
       </BackgroundElements>
       
       <Header />
-
+      <ToastContainer />
       <div className="content-wrapper">
         <div className="welcome-section">
           <h1>Welcome to <span>VidHive</span></h1>
@@ -57,7 +60,6 @@ const Dashboard = () => {
         </div>
 
         <div className="cards-container">
-          <ToastContainer />
 
           <div className="card">
             <div className="card-image">
