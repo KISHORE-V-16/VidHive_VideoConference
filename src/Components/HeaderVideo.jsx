@@ -1,5 +1,5 @@
 import React from 'react';
-import styled,{keyframes} from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { MdCallEnd } from 'react-icons/md';
 import { Video } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +16,7 @@ const HeaderVideo = ({ hangUp }) => {
                             <defs>
                                 <linearGradient id="videoGradient" x1="0" y1="0" x2="1" y2="0">
                                     <stop offset="0%" stopColor="#0373fc" />
-                                    <stop offset="100%" stopColor="#ffffff" />
+                                    <stop offset="100%" stopColor="#361cb7" />
                                 </linearGradient>
                             </defs>
 

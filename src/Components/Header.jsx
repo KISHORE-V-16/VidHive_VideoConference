@@ -1,5 +1,5 @@
 import React,{useEffect} from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { AiOutlineLogout } from 'react-icons/ai';
 import Logo from '../asserts/logo.png';
 import { useNavigate } from 'react-router-dom';
@@ -76,14 +76,14 @@ const Header = ({ createmeet, create1on1meet, videoconferenceapp, mymeeting }) =
                         <defs>
                             <linearGradient id="videoGradient" x1="0" y1="0" x2="1" y2="0">
                                 <stop offset="0%" stopColor="#0373fc" />
-                                <stop offset="100%" stopColor="#ffffff" />
+                                <stop offset="100%" stopColor="#361cb7" />
                             </linearGradient>
                         </defs>
 
                         <Video stroke="url(#videoGradient)" strokeWidth={2} />
                     </svg>
 
-                    <span className="logo-text">VidHive</span>
+                    <LogoText>VidHive</LogoText>
                 </div>
 
                 <div className="welcome-container">
@@ -130,6 +130,34 @@ const Header = ({ createmeet, create1on1meet, videoconferenceapp, mymeeting }) =
     );
 };
 
+// Animation keyframes
+const float = keyframes`
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(5deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+`;
+
+const LogoText = styled.h1`
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  background: linear-gradient(to right, #0a65ed, #361cb7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: ${float} 6s ease-in-out infinite;
+  text-shadow: 0 5px 15px rgba(10, 101, 237, 0.3);
+  
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
+  
+  @media (max-width: 576px) {
+    font-size: 1rem;
+  }
+`;
+
+
 const HeaderContainer = styled.header`
   width: 100%;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -144,7 +172,7 @@ const HeaderContainer = styled.header`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem;
+    padding:0rem 0.4rem;
     border-bottom:1px solid #3e3e3e;
     background-color: #15181b;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
