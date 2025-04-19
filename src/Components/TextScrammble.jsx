@@ -2,20 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 const phrases = [
     "You can use an AI Avatar to represent yourself 🤖",
-    "Control everything using just your voice 🎤",
-    "Use hand gestures to interact naturally ✋",
     "This app detects your emotions in real-time 😄",
     "Chat through smart, conversation-based messaging 💬",
-    "Switch to hands-free control with voice commands 🗣️",
     "Express yourself through realistic AI avatars 👤✨",
-    "Wave your hand to perform actions instantly 👋",
     "Feel more connected with emotion recognition 💖",
-    "Send messages just by speaking 🤖📩",
-    "Let your gestures do the talking 🙌",
     "Get human-like responses with emotion-aware AI 🧠",
-    "Enjoy seamless voice-over control throughout the call 🎙️",
     "Your avatar mirrors your expressions in real-time 😎",
-    "Talk, gesture, and express — all in one smart call 💡"
+    "Talk, and express — all in one smart call 💡"
   ];
   
 
